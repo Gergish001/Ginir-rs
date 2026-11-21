@@ -12,8 +12,6 @@ use crate::palette::Palette;
 pub struct Options {
     pub herdr_darken: f64,
     pub herdr_saturate: f64,
-    pub opencode_darken: f64,
-    pub opencode_saturate: f64,
     pub niri_darken: f64,
     pub niri_saturate: f64,
     pub fetch_darken: f64,
@@ -25,8 +23,6 @@ impl Default for Options {
         Self {
             herdr_darken: 0.40,
             herdr_saturate: 0.20,
-            opencode_darken: 0.60,
-            opencode_saturate: 0.50,
             niri_darken: 0.20,
             niri_saturate: 0.34,
             fetch_darken: 0.10,

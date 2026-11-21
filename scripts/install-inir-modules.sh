@@ -15,6 +15,16 @@ fi
 
 install -d "$INIR/scripts/colors/modules" "$INIR/scripts/colors/targets"
 
+# Drop the earlier dark60 variant; the accent is patched in the active theme now.
+for stale in \
+  "$INIR/scripts/colors/modules/96-opencode-dark60.sh" \
+  "$INIR/scripts/colors/targets/opencode-dark60.json"; do
+  if [ -e "$stale" ]; then
+    rm -f "$stale"
+    echo "removed: $stale"
+  fi
+done
+
 for file in "$SRC"/modules/*.sh; do
   name="$(basename "$file")"
   target="$INIR/scripts/colors/modules/$name"

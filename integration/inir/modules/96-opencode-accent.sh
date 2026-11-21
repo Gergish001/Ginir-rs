@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# iNiR color module: OpenCode inir-dark60 theme through the Rust binary.
+# iNiR color module: keep the active OpenCode inir theme's accent in sync.
 set -euo pipefail
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/module-runtime.sh"
-COLOR_MODULE_ID="opencode-dark60"
+COLOR_MODULE_ID="opencode-accent"
 
 BIN="$HOME/.local/bin/inir-theme"
 [[ -x "$BIN" ]] || exit 0
 
 if "$BIN" apply --target opencode --no-reload >> "$STATE_DIR/user/generated/theming_modules.log" 2>&1; then
-  log_module "opencode dark60 synced (Rust)"
+  log_module "opencode accent synced (Rust)"
 else
-  log_module "opencode dark60 Rust sync failed"
+  log_module "opencode accent Rust sync failed"
 fi

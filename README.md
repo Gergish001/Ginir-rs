@@ -22,7 +22,7 @@ with a per-app transform.
 | id | What it writes | Transform |
 |---|---|---|
 | `herdr` | `~/.config/herdr/config.toml` `[theme.custom]` | exact iNiR accent, darker surfaces |
-| `opencode` | `~/.config/opencode/themes/inir-dark60.json` | −60% lightness, +50% saturation |
+| `opencode` | `~/.config/opencode/themes/inir.json` `m3Tertiary` | exact iNiR accent (active theme patch) |
 | `niri` | Niri `focus-ring active-color` in `config.kdl` + `config.d/*.kdl` | −20% lightness, saturation ×1.34 |
 | `fetch3d` | `~/.config/fetch/config` `label_color` | −10% lightness (3D fetch, **not** fastfetch) |
 | `launchers` | `~/.local/bin/cmx`, `~/.local/bin/lavax` | nearest ANSI / accent + teal |
@@ -79,7 +79,7 @@ inir theme doctor
 |---|---|---|
 | `05-niri.sh` | `niri.json` | `niri` |
 | `95-herdr.sh` | `herdr.json` | `herdr` |
-| `96-opencode-dark60.sh` | `opencode-dark60.json` | `opencode` |
+| `96-opencode-accent.sh` | `opencode-accent.json` | `opencode` |
 | `97-fetch3d.sh` | `fetch3d.json` | `fetch3d` |
 | `98-launchers.sh` | `launchers.json` | `launchers` |
 

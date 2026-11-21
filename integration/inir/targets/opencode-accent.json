@@ -1,0 +1,8 @@
+{
+  "id": "opencode-accent",
+  "label": "OpenCode accent",
+  "module": "96-opencode-accent.sh",
+  "category": "editor",
+  "inputs": ["app-palette.json", "terminal.json"],
+  "description": "Patch the active OpenCode inir theme so its accent matches the iNiR system accent (Rust)."
+}
