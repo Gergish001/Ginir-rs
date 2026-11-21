@@ -163,6 +163,7 @@ CORE_PKGS=(
   kde-plasma/plasma-integration
   gui-apps/qt6ct
   x11-themes/kvantum
+  x11-themes/adw-gtk3       # GTK3/4 dark theme used by the shell and dialogs
 
   # session, desktop and CLI basics
   app-shells/fish
@@ -465,6 +466,60 @@ configure_tessdata_languages() {
   fi
 }
 
+configure_gtk_theme() {
+  local user=$TARGET_USER
+  [[ -n $user && $user != root ]] || {
+    warn "no desktop user; skipping GTK theme settings"
+    return 0
+  }
+
+  local home uid group
+  home=$(getent passwd "$user" | cut -d: -f6)
+  uid=$(id -u "$user")
+  group=$(id -gn "$user")
+  [[ -n $home && -n $uid && -n $group ]] || return 0
+
+  local version dir file
+  for version in 3.0 4.0; do
+    dir="$home/.config/gtk-$version"
+    file="$dir/settings.ini"
+    install -d -m 700 -o "$user" -g "$group" "$dir"
+
+    if [[ -f $file ]]; then
+      if grep -q '^gtk-theme-name=' "$file"; then
+        sed -i 's/^gtk-theme-name=.*/gtk-theme-name=adw-gtk3-dark/' "$file"
+      else
+        printf 'gtk-theme-name=adw-gtk3-dark\n' >> "$file"
+      fi
+      grep -q '^gtk-application-prefer-dark-theme=1' "$file" \
+        || printf 'gtk-application-prefer-dark-theme=1\n' >> "$file"
+    else
+      printf '[Settings]\ngtk-theme-name=adw-gtk3-dark\ngtk-application-prefer-dark-theme=1\n' > "$file"
+    fi
+    chown "$user:$group" "$file"
+  done
+
+  if command -v runuser >/dev/null 2>&1; then
+    as_target_user() { runuser -u "$user" -- "$@"; }
+  else
+    as_target_user() { sudo -u "$user" -- "$@"; }
+  fi
+
+  if command -v gsettings >/dev/null 2>&1 && [[ -S /run/user/$uid/bus ]]; then
+    as_target_user env XDG_RUNTIME_DIR="/run/user/$uid" \
+      DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" \
+      gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-dark 2>/dev/null \
+      || warn "could not set gtk-theme via gsettings"
+    as_target_user env XDG_RUNTIME_DIR="/run/user/$uid" \
+      DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" \
+      gsettings set org.gnome.desktop.interface color-scheme prefer-dark 2>/dev/null \
+      || warn "could not set color-scheme via gsettings"
+  else
+    warn "gsettings session bus unavailable; GTK theme set in settings.ini only"
+  fi
+  ok "GTK theme adw-gtk3-dark configured"
+}
+
 install_gum() {
   command -v gum >/dev/null 2>&1 && { ok "gum already installed"; return 0; }
 
@@ -712,6 +767,7 @@ info "installing helper binaries and fonts"
 install_gum
 install_material_symbols
 install_jetbrains_nerd
+configure_gtk_theme
 
 if ((ENABLE_SERVICES)); then
   info "enabling services"
