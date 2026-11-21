@@ -23,7 +23,7 @@ with a per-app transform.
 |---|---|---|
 | `herdr` | `~/.config/herdr/config.toml` `[theme.custom]` | exact iNiR accent, darker surfaces |
 | `opencode` | `~/.config/opencode/themes/inir-dark60.json` | −60% lightness, +50% saturation |
-| `niri` | Niri `focus-ring active-color` | −20% lightness, saturation ×1.34 |
+| `niri` | Niri `focus-ring active-color` in `config.kdl` + `config.d/*.kdl` | −20% lightness, saturation ×1.34 |
 | `fetch3d` | `~/.config/fetch/config` `label_color` | −10% lightness (3D fetch, **not** fastfetch) |
 | `launchers` | `~/.local/bin/cmx`, `~/.local/bin/lavax` | nearest ANSI / accent + teal |
 
@@ -66,9 +66,14 @@ Every write is backed up to `~/gentoo-opt-backups/`. `--dry-run` only reports.
 
 ## iNiR integration
 
-`scripts/inir/` holds the color modules that call the Rust binary. Install them
-into iNiR's color pipeline and add the matching manifests under
-`upstream/inir/scripts/colors/targets/`:
+`integration/inir/` holds the color modules that call the Rust binary and their
+target manifests. Install them into a live iNiR tree with:
+
+```sh
+./scripts/install.sh                 # build + install ~/.local/bin/inir-theme
+./scripts/install-inir-modules.sh    # copy modules/targets, backing up conflicts
+inir theme doctor
+```
 
 | module | target manifest | Rust target |
 |---|---|---|
@@ -78,27 +83,21 @@ into iNiR's color pipeline and add the matching manifests under
 | `97-fetch3d.sh` | `fetch3d.json` | `fetch3d` |
 | `98-launchers.sh` | `launchers.json` | `launchers` |
 
-```sh
-for f in scripts/inir/*.sh; do
-  install -m755 "$f" ~/.config/quickshell/inir/scripts/colors/modules/
-done
-inir theme doctor
-```
-
 The modules read `app-palette.json` and `terminal.json`, which iNiR writes before
 the theming modules run, so there is no race with the kitty target.
 
 ## Layout
 
 ```
-crates/inir-theme-core/       accent parsing, colour maths, palette, targets
-crates/inir-theme-cli/        inir-theme binary
+crates/inir-theme-core/         accent parsing, colour maths, palette, targets
+crates/inir-theme-cli/          inir-theme binary
 crates/inir-theme-core/assets/  OpenCode template (derived from iNiR)
-patches/                      external C / module patches outside Rust
-legacy/                       original Python/Bash implementations
-scripts/inir/                 iNiR color-module wrappers
-scripts/install.sh            local install
-upstream/inir/                untouched iNiR QML reference tree
+integration/inir/               iNiR modules + target manifests (additive)
+patches/                        external C patches outside Rust
+legacy/                         original Python/Bash implementations
+scripts/install.sh              local install of the binary
+scripts/install-inir-modules.sh install modules into a live iNiR tree
+upstream/inir/                  untouched iNiR QML reference tree
 ```
 
 ## Gentoo
