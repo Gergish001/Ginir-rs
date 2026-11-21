@@ -1,0 +1,8 @@
+{
+  "id": "launchers",
+  "label": "cmatrix / lavat",
+  "module": "98-launchers.sh",
+  "category": "terminal",
+  "inputs": ["app-palette.json", "terminal.json"],
+  "description": "Write cmx/lavax wrappers with the current iNiR accent (Rust)."
+}

@@ -1,0 +1,32 @@
+//! Target registry.
+
+pub mod fetch;
+pub mod herdr;
+pub mod launchers;
+pub mod niri;
+pub mod opencode;
+
+use anyhow::Result;
+
+use crate::context::{Report, ThemeContext};
+
+pub trait Target: Send + Sync {
+    fn id(&self) -> &'static str;
+    fn label(&self) -> &'static str;
+    fn description(&self) -> &'static str;
+    fn apply(&self, ctx: &ThemeContext) -> Result<Report>;
+}
+
+pub fn all() -> Vec<Box<dyn Target>> {
+    vec![
+        Box::new(herdr::HerdrTarget),
+        Box::new(opencode::OpencodeTarget),
+        Box::new(niri::NiriTarget),
+        Box::new(fetch::FetchTarget),
+        Box::new(launchers::LaunchersTarget),
+    ]
+}
+
+pub fn find(id: &str) -> Option<Box<dyn Target>> {
+    all().into_iter().find(|t| t.id() == id)
+}

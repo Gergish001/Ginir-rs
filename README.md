@@ -1,109 +1,138 @@
-<p align="center">
-  <img src="docs/shots/readme-hero.webp" alt="The iRiS desktop at work: the Island playing music over the dashboard widgets" width="100%">
-</p>
+# Ginir-rs
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: light)" srcset="docs/images/readme/mark-light.svg">
-    <img src="docs/images/readme/mark-dark.svg" alt="" width="56">
-  </picture>
-</p>
+Rust-first theming and backend layer built on top of [iNiR](https://github.com/snowarch/iNiR):
+palette maths, accent parsing/transformation and generators that push the
+derived accent into other applications.
 
-<h1 align="center">iNiR</h1>
+This is a new project that started from iNiR; the GitHub repository is a fork
+only because that is how it was created. The original iNiR QML tree is kept
+untouched in [`upstream/inir/`](upstream/inir/) as reference.
 
-<p align="center">
-  A complete desktop shell for <a href="https://github.com/YaLTeR/niri">Niri</a> and <a href="https://github.com/noctalia-dev/umbriel">Umbriel</a>.<br>
-  Pick a family, make it yours, keep it current with one command.
-</p>
+> **What "Rust-first" means here.** The theming/backend logic — reading iNiR's
+> palette, transforming the accent, writing app configs, reloading the app — is
+> Rust (`inir-theme`). The iNiR QML widgets are not reimplemented: they still run
+> on `qs-rs`, a separate upstream project. Rewriting those widgets would be a new
+> shell, not a port.
 
-<p align="center">
-  <a href="https://github.com/snowarch/iNiR/releases/latest"><img src="https://img.shields.io/github/v/release/snowarch/iNiR?style=flat-square&label=release&color=111111" alt="Latest release"></a>
-  <a href="https://github.com/snowarch/iNiR/stargazers"><img src="https://img.shields.io/github/stars/snowarch/iNiR?style=flat-square&color=111111" alt="Stars"></a>
-  <a href="https://discord.gg/pAPTfAhZUJ"><img src="https://img.shields.io/badge/discord-join-111111?style=flat-square&logo=discord&logoColor=white" alt="Discord"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-111111?style=flat-square" alt="GPL-3.0"></a>
-</p>
+## Targets
 
-<p align="center">
-  <a href="https://inir.space">inir.space</a> ·
-  <a href="https://inir.space/docs/install/">Install</a> ·
-  <a href="https://inir.space/docs">Docs</a> ·
-  <a href="https://inir.space/hub">Hub</a> ·
-  <a href="https://inir.space/changelog">Changelog</a> ·
-  <a href="https://discord.gg/pAPTfAhZUJ">Discord</a>
-</p>
+Each target parses the current iNiR accent and writes it into another app,
+with a per-app transform.
 
-<p align="center">
-  <sub>
-    <a href="README.md">English</a> · <a href="docs/readme/README.es.md">Español</a> · <a href="docs/readme/README.ru.md">Русский</a> · <a href="docs/readme/README.zh.md">中文</a> · <a href="docs/readme/README.ja.md">日本語</a> · <a href="docs/readme/README.pt.md">Português</a> · <a href="docs/readme/README.fr.md">Français</a> · <a href="docs/readme/README.de.md">Deutsch</a> · <a href="docs/readme/README.ko.md">한국어</a> · <a href="docs/readme/README.hi.md">हिन्दी</a> · <a href="docs/readme/README.ar.md">العربية</a> · <a href="docs/readme/README.it.md">Italiano</a>
-  </sub>
-</p>
-
-## Families
-
-<p align="center"><img src="docs/shots/readme-iris.webp" alt="iRiS" width="100%"><br><sub><b>iRiS</b> · One Island on any edge that becomes what you open, plus a dock</sub></p>
-
-<table>
-<tr>
-<td width="50%" valign="top"><img src="docs/shots/readme-material.webp" alt="Material" width="100%"><br><sub><b>Material</b> · A bar on any edge, sidebars, overview, global styles</sub></td>
-<td width="50%" valign="top"><img src="docs/shots/readme-waffle.webp" alt="Waffle" width="100%"><br><sub><b>Waffle</b> · A Windows 11 taskbar and action center</sub></td>
-</tr>
-</table>
-
-`Super+Shift+W` switches between them. More looks, widgets, themes and web apps are in the [hub](https://inir.space/hub).
-
-<table>
-<tr>
-<td width="33%" valign="top"><img src="docs/shots/readme-settings.webp" alt="Settings" width="100%"><br><sub><b>Settings</b> · Each option drawn as what it changes</sub></td>
-<td width="33%" valign="top"><img src="docs/shots/readme-edit.webp" alt="Desktop" width="100%"><br><sub><b>Desktop</b> · Widgets you place, size and stack</sub></td>
-<td width="33%" valign="top"><img src="docs/shots/readme-lock.webp" alt="Lock" width="100%"><br><sub><b>Lock</b> · Calm, with your music and the time</sub></td>
-</tr>
-</table>
-
-## Install
-
-```bash
-git clone https://github.com/snowarch/inir.git
-cd inir
-./setup install
-```
-
-Arch, Fedora, Debian, Ubuntu, Void and NixOS. The [install guide](https://inir.space/docs/install/) has what each one needs. It runs on Niri and on Umbriel: [Compositors](https://inir.space/docs/compositors/) shows how to add Umbriel.
-
-## Update
-
-```bash
-inir update
-```
-
-Your config and your edits stay. If the new version doesn't start, the update puts back the one you had.
-
-## How it's built
-
-iNiR is a base and the parts around it, each in its own repository. Nothing compiles on your machine: setup and
-`inir update` fetch every part prebuilt and check it by sha256.
-
-| Repository | What it is | Latest |
+| id | What it writes | Transform |
 |---|---|---|
-| **iNiR** (this one) | The base: services, config, Settings, the welcome wizard, setup and update, the plugin host | ![](https://img.shields.io/github/v/release/snowarch/iNiR?label=&style=flat-square&color=111111) |
-| [inir-hub](https://github.com/snowarch/inir-hub) | Every plugin: the three families, components, themes, widgets, web apps | [inir.space/hub](https://inir.space/hub) |
-| [qs-rs](https://github.com/snowarch/qs-rs) | The runtime: Quickshell rewritten in Rust, with its own Qt | ![](https://img.shields.io/github/v/release/snowarch/qs-rs?label=&style=flat-square&color=111111) |
-| [inir-accel](https://github.com/snowarch/inir-accel) | What the shell runs in the background, in Rust: colours, thumbnails, sensors, search | ![](https://img.shields.io/github/v/release/snowarch/inir-accel?label=&style=flat-square&color=111111) |
-| [inir-cli](https://github.com/snowarch/inir-cli) | The `inir` command: IPC, doctor, update, `inir hub` | ![](https://img.shields.io/github/v/release/snowarch/inir-cli?label=&style=flat-square&color=111111) |
-| [inir-site](https://github.com/snowarch/inir-site) | [inir.space](https://inir.space): the site, the docs, the hub catalogue | |
-| [iNiR-Walls](https://github.com/snowarch/iNiR-Walls), [inir-mascot](https://github.com/snowarch/inir-mascot) | The wallpaper pack and Kira's art, both optional in setup | |
+| `herdr` | `~/.config/herdr/config.toml` `[theme.custom]` | exact iNiR accent, darker surfaces |
+| `opencode` | `~/.config/opencode/themes/inir-dark60.json` | −60% lightness, +50% saturation |
+| `niri` | Niri `focus-ring active-color` | −20% lightness, saturation ×1.34 |
+| `fetch3d` | `~/.config/fetch/config` `label_color` | −10% lightness (3D fetch, **not** fastfetch) |
+| `launchers` | `~/.local/bin/cmx`, `~/.local/bin/lavax` | nearest ANSI / accent + teal |
 
-[Architecture](docs/ARCHITECTURE_OVERVIEW.md) has the whole map. To add something, make it a plugin:
-[inir-hub's guide](https://github.com/snowarch/inir-hub/blob/main/CONTRIBUTING.md). To change the base:
-[CONTRIBUTING](.github/CONTRIBUTING.md).
+`fetch3d` is the custom 3D fetch renderer. **fastfetch, btop and yazi are not
+touched by this project** and get no patches or config changes.
 
-## Credits
+## Build and install
 
-- [end-4](https://github.com/end-4/dots-hyprland): illogical-impulse, the Hyprland dots iNiR started from
-- [Quickshell](https://quickshell.outfoxxed.me/) by outfoxxed: the framework, and the API qs-rs keeps
-- [Niri](https://github.com/YaLTeR/niri) by YaLTeR: the compositor
-- [Umbriel](https://github.com/noctalia-dev/umbriel) by the Noctalia team: the other compositor iNiR runs on
-- [Gakuseei](https://github.com/Gakuseei): [Ricelin](https://github.com/Gakuseei/Ricelin), where the pill bar and the washi and flame look come from
-- [pctrade/end4-pC](https://github.com/pctrade/end4-pC): a fork with ideas worth taking
-- Everyone who [contributes](https://github.com/snowarch/iNiR/graphs/contributors) and tests on Discord
+```sh
+cargo build --release
+install -m755 target/release/inir-theme ~/.local/bin/inir-theme
+# or
+./scripts/install.sh
+```
 
-[GPL-3.0](LICENSE) with the terms in [NOTICE](NOTICE). Copyright (C) 2025-2026 snowarch.
+Requires Rust 1.85+; no Qt, no Python.
+
+## Usage
+
+```sh
+inir-theme list
+inir-theme doctor
+inir-theme apply --target herdr
+inir-theme apply --all --dry-run
+inir-theme apply --all
+```
+
+Source selection is automatic: iNiR's generated
+`app-palette.json` + `terminal.json`, falling back to
+`~/.config/kitty/theme.conf`. Override with:
+
+```sh
+inir-theme apply --all \
+  --app-palette ~/.local/state/quickshell/user/generated/app-palette.json \
+  --terminal-json ~/.local/state/quickshell/user/generated/terminal.json \
+  --accent '#b78cda'
+```
+
+Every write is backed up to `~/gentoo-opt-backups/`. `--dry-run` only reports.
+
+## iNiR integration
+
+`scripts/inir/` holds the color modules that call the Rust binary. Install them
+into iNiR's color pipeline and add the matching manifests under
+`upstream/inir/scripts/colors/targets/`:
+
+| module | target manifest | Rust target |
+|---|---|---|
+| `05-niri.sh` | `niri.json` | `niri` |
+| `95-herdr.sh` | `herdr.json` | `herdr` |
+| `96-opencode-dark60.sh` | `opencode-dark60.json` | `opencode` |
+| `97-fetch3d.sh` | `fetch3d.json` | `fetch3d` |
+| `98-launchers.sh` | `launchers.json` | `launchers` |
+
+```sh
+for f in scripts/inir/*.sh; do
+  install -m755 "$f" ~/.config/quickshell/inir/scripts/colors/modules/
+done
+inir theme doctor
+```
+
+The modules read `app-palette.json` and `terminal.json`, which iNiR writes before
+the theming modules run, so there is no race with the kitty target.
+
+## Layout
+
+```
+crates/inir-theme-core/       accent parsing, colour maths, palette, targets
+crates/inir-theme-cli/        inir-theme binary
+crates/inir-theme-core/assets/  OpenCode template (derived from iNiR)
+patches/                      external C / module patches outside Rust
+legacy/                       original Python/Bash implementations
+scripts/inir/                 iNiR color-module wrappers
+scripts/install.sh            local install
+upstream/inir/                untouched iNiR QML reference tree
+```
+
+## Gentoo
+
+The Rust binary installs with `cargo`/`scripts/install.sh` today. The full stack
+needs a Gentoo overlay:
+
+- `gui-apps/qs-rs` (Rust + Qt 6/LayerShellQt, or the prebuilt Qt bundle)
+- `dev-util/inir-accel` (Rust)
+- `dev-util/inir-cli` (Go)
+- `gui-apps/inir` (QML payload + modules + runit/OpenRC service)
+
+Those pieces are separate upstream repositories; see `packaging/gentoo/README.md`.
+A full iNiR ebuild is not included yet, because qs-rs/Qt packaging is the hard
+part, not this CLI.
+
+## Relationship to upstream and licenses
+
+- iNiR: GPL-3.0
+- qs-rs: LGPL-3.0
+- inir-accel: LGPL-3.0
+- inir-cli: GPL-3.0
+- this project: **GPL-3.0**
+
+The OpenCode template in `crates/inir-theme-core/assets/` is derived from iNiR's
+generated theme and remains under the iNiR license. The fetch patch is for the
+separate 3D `fetch` source.
+
+## Roadmap
+
+1. Port more accent consumers (lazygit, GTK/Qt accents, other terminals) into
+   `inir-theme-core`, each as a separate target.
+2. Move the generators into `inir-accel` upstream so the shell gets one Rust
+   binary instead of a Python helper plus Bash modules.
+3. Add a Hub colour-theme/plugin so users install the targets without a fork.
+4. Ship the Gentoo overlay for `inir-theme`, `qs-rs`, `inir-accel`, `inir-cli`
+   and iNiR.

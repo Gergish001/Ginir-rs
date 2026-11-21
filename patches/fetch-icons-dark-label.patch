@@ -1,0 +1,123 @@
+diff --git a/fetch.c b/fetch.c
+index bb2169e..b45551f 100644
+--- a/fetch.c
++++ b/fetch.c
+@@ -963,7 +963,7 @@ static char custom_label[MAX_CUSTOM][64];
+ static char custom_value[MAX_CUSTOM][256];
+ static int custom_count = 0;
+ static int is_refresh_pass = 0;     // 1 during the animation refresh tick
+-static char label_color[16] = "35"; // default magenta
++static char label_color[32] = "35"; // default magenta; fits 38;2;R;G;B
+ static int config_height = 0;       // 0 = auto (match info lines)
+ static float size_scale = 1.0f;
+ static float config_speed = 0.0f;
+@@ -984,6 +984,7 @@ static char extra_disks[MAX_EXTRA_DISKS][128];
+ static int extra_disk_count = 0;
+ static enum v_alignment config_v_alignment = V_ALIGN_TOP;
+ static enum h_alignment config_h_alignment = H_ALIGN_LEFT;
++static int config_v_offset = 0; // shift the logo down/up inside its canvas
+ 
+ // Light direction presets
+ static float light_x = 0.4082f, light_y = 0.8165f, light_z = -0.4082f;
+@@ -1088,6 +1089,12 @@ static void load_config(void) {
+       parse_integer("height", val, 1, MAX_HEIGHT, &config_height);
+       continue;
+     }
++    if (strncmp(line, "v_offset=", 9) == 0) {
++      char *val = line + 9;
++      strip_inline_hint(val);
++      parse_integer("v_offset", val, -MAX_HEIGHT, MAX_HEIGHT, &config_v_offset);
++      continue;
++    }
+     if (strncmp(line, "size=", 5) == 0) {
+       char *val = line + 5;
+       strip_inline_hint(val);
+@@ -1309,6 +1316,35 @@ static void add_line(const char *line) {
+ 
+ static int box_width = 0; // >0 once box_wrap_lines() has run
+ 
++// Nerd Font icons for the info categories, matching fastfetch examples/13.
++static const char *label_icon(const char *label) {
++  if (!strcmp(label, "OS")) return "";
++  if (!strcmp(label, "Kernel")) return "";
++  if (!strcmp(label, "WM")) return "󰇄";
++  if (!strcmp(label, "Shell")) return "";
++  if (!strcmp(label, "Terminal")) return "";
++  if (!strcmp(label, "Packages")) return "󰏗";
++  if (!strcmp(label, "Uptime")) return "󰅐";
++  if (!strcmp(label, "CPU")) return "󰍛";
++  if (!strcmp(label, "GPU")) return "󰢮";
++  if (!strcmp(label, "Memory")) return "";
++  if (!strcmp(label, "Disk") || !strncmp(label, "Disk (", 6)) return "󰉉";
++  if (!strcmp(label, "Host")) return "󰇅";
++  if (!strcmp(label, "Display") || !strncmp(label, "Display (", 9)) return "󰍹";
++  if (!strcmp(label, "Display Manager")) return "󰍹";
++  if (!strcmp(label, "Swap")) return "󰓅";
++  if (!strcmp(label, "IP") || !strcmp(label, "Network")) return "󰩟";
++  if (!strncmp(label, "Battery", 7)) return "󰁹";
++  if (!strcmp(label, "Locale")) return "󰗊";
++  if (!strcmp(label, "Theme")) return "󰏘";
++  if (!strcmp(label, "Icons")) return "󰀻";
++  if (!strcmp(label, "Font")) return "󰛖";
++  if (!strcmp(label, "Cursor")) return "󰆿";
++  if (!strcmp(label, "Power Profile")) return "󰚥";
++  if (!strcmp(label, "Colors")) return "";
++  return "";
++}
++
+ static void add_info(const char *label, const char *fmt, ...) {
+   char val[MAX_LINE_LEN];
+   va_list ap;
+@@ -1316,9 +1352,16 @@ static void add_info(const char *label, const char *fmt, ...) {
+   vsnprintf(val, sizeof(val), fmt, ap);
+   va_end(ap);
+ 
++  char label_text[96];
++  const char *icon = label_icon(label);
++  if (*icon)
++    snprintf(label_text, sizeof(label_text), "%s %s", icon, label);
++  else
++    snprintf(label_text, sizeof(label_text), "%s", label);
++
+   char line[MAX_LINE_LEN];
+-  snprintf(line, sizeof(line), "\033[1;%sm%s\033[0m: %s", label_color, label,
+-           val);
++  snprintf(line, sizeof(line), "\033[1;%sm%s\033[0m: %s", label_color,
++           label_text, val);
+ 
+   // Refresh tick: replace the field's line in place. Initial pass: always
+   // append a new line (so gathers that emit multiple rows, like multi-GPU,
+@@ -4199,7 +4242,8 @@ int main(int argc, char **argv) {
+           "    spin=<axes>              Rotation axes (x, y, or xy)\n"
+           "    speed=<float>            Rotation speed\n"
+           "    size=<float>             Logo scale\n"
+-          "    height=<n>               Render height in rows\n\n"
++          "    height=<n>               Render height in rows\n"
++          "    v_offset=<n>             Shift the logo down/up by rows\n\n"
+           "    box=<0/1>                Draw a border box around the info block\n\n"
+           "Logo: ~/.config/fetch/logo.txt\n"
+           "  Custom ASCII/Unicode logo. Add '# distro: <name>' as the\n"
+@@ -4412,6 +4456,10 @@ int main(int argc, char **argv) {
+         add_info(custom_label[ci], "%s", custom_value[ci]);
+       } else if (id == F_COLORS) {
+         add_line("");
++        char colors_label[MAX_LINE_LEN];
++        snprintf(colors_label, sizeof(colors_label), "\033[1;%sm%s Colors\033[0m",
++                 label_color, label_icon("Colors"));
++        add_line(colors_label);
+         add_line("\033[40m   \033[41m   \033[42m   \033[43m   "
+                  "\033[44m   \033[45m   \033[46m   \033[47m   \033[0m");
+         add_line("\033[100m   \033[101m   \033[102m   \033[103m   "
+@@ -4444,8 +4492,10 @@ int main(int argc, char **argv) {
+     if (ys > face_up) face_up = ys;
+     if (-ys > face_dn) face_dn = -ys;
+   }
+-  // Place y_center so the logo top lands at row 1 (row 0 is padding)
+-  float fixed_y_center = face_up + 1.0f;
++  // Place y_center so the logo top lands at row 1 (row 0 is padding),
++  // then apply the configured vertical shift. Positive moves the logo down;
++  // the info panel keeps its own fixed row.
++  float fixed_y_center = face_up + 1.0f + (float)config_v_offset;
+ 
+   // Pre-compute Blinn-Phong half-vector (view direction is constant (0,0,-1))
+   const float hx0 = (light_x + 0.0f), hy0 = (light_y + 0.0f), hz0 = (light_z - 1.0f);

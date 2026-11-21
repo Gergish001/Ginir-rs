@@ -1,0 +1,8 @@
+{
+  "id": "opencode-dark60",
+  "label": "OpenCode dark60",
+  "module": "96-opencode-dark60.sh",
+  "category": "editor",
+  "inputs": ["app-palette.json", "terminal.json"],
+  "description": "Generate the OpenCode inir-dark60 theme from the iNiR palette (Rust)."
+}

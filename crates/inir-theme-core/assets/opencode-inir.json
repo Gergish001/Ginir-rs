@@ -1,0 +1,255 @@
+{
+  "$schema": "https://opencode.ai/theme.json",
+  "defs": {
+    "ansiBlue": "#84BBFC",
+    "ansiBrightBlue": "#9EC9FF",
+    "ansiBrightCyan": "#78D4D9",
+    "ansiBrightGreen": "#A6D28D",
+    "ansiBrightMagenta": "#ECB2EE",
+    "ansiBrightRed": "#FFB1B6",
+    "ansiBrightYellow": "#EEBE66",
+    "ansiCyan": "#50C8CF",
+    "ansiGreen": "#96C574",
+    "ansiMagenta": "#E7A0E3",
+    "ansiRed": "#FF9C9F",
+    "ansiYellow": "#E3AF48",
+    "m3Error": "#ed8c81",
+    "m3ErrorContainer": "#51231e",
+    "m3InverseOnSurface": "#15100f",
+    "m3InversePrimary": "#9e3e56",
+    "m3InverseSurface": "#ede6e4",
+    "m3OnPrimary": "#221014",
+    "m3OnPrimaryContainer": "#ffd0d8",
+    "m3OnSurface": "#CEC3C1",
+    "m3OnSurfaceVariant": "#B5ABA9",
+    "m3Outline": "#887c79",
+    "m3OutlineVariant": "#504947",
+    "m3Primary": "#e18195",
+    "m3PrimaryContainer": "#48282e",
+    "m3Secondary": "#c2989f",
+    "m3SecondaryContainer": "#412c30",
+    "m3Shadow": "#000000",
+    "m3Success": "#69c27e",
+    "m3SuccessContainer": "#374B3E",
+    "m3Surface": "#211B1A",
+    "m3SurfaceBright": "#211c1b",
+    "m3SurfaceContainer": "#292322",
+    "m3SurfaceContainerHigh": "#322b2a",
+    "m3SurfaceContainerHighest": "#352f2d",
+    "m3SurfaceContainerLow": "#1c1716",
+    "m3SurfaceDim": "#0b0707",
+    "m3Tertiary": "#60ba8d",
+    "m3TertiaryContainer": "#073d26"
+  },
+  "theme": {
+    "accent": {
+      "dark": "m3Tertiary",
+      "light": "#83c5a2"
+    },
+    "background": {
+      "dark": "m3Surface",
+      "light": "m3InverseSurface"
+    },
+    "backgroundElement": {
+      "dark": "m3SurfaceContainerHigh",
+      "light": "#efe9e7"
+    },
+    "backgroundMenu": {
+      "dark": "m3SurfaceContainerHigh",
+      "light": "#eee8e6"
+    },
+    "backgroundPanel": {
+      "dark": "m3SurfaceContainer",
+      "light": "#eee7e5"
+    },
+    "border": {
+      "dark": "m3OutlineVariant",
+      "light": "#8b8584"
+    },
+    "borderActive": {
+      "dark": "m3Primary",
+      "light": "m3InversePrimary"
+    },
+    "borderSubtle": {
+      "dark": "#413b39",
+      "light": "#aca5a4"
+    },
+    "diffAdded": {
+      "dark": "m3Success",
+      "light": "#97cea1"
+    },
+    "diffAddedBg": {
+      "dark": "#323a2f",
+      "light": "#dde1d7"
+    },
+    "diffAddedLineNumberBg": {
+      "dark": "#2f322b",
+      "light": "#e2e3db"
+    },
+    "diffContext": {
+      "dark": "m3OnSurfaceVariant",
+      "light": "#605a59"
+    },
+    "diffContextBg": {
+      "dark": "m3SurfaceContainer",
+      "light": "#eee7e5"
+    },
+    "diffHighlightAdded": {
+      "dark": "ansiBrightGreen",
+      "light": "ansiGreen"
+    },
+    "diffHighlightRemoved": {
+      "dark": "ansiBrightRed",
+      "light": "ansiRed"
+    },
+    "diffHunkHeader": {
+      "dark": "m3Outline",
+      "light": "#8b8584"
+    },
+    "diffLineNumber": {
+      "dark": "m3Outline",
+      "light": "#8b8584"
+    },
+    "diffRemoved": {
+      "dark": "m3Error",
+      "light": "#edaba3"
+    },
+    "diffRemovedBg": {
+      "dark": "#463230",
+      "light": "#eddbd8"
+    },
+    "diffRemovedLineNumberBg": {
+      "dark": "#3c2d2b",
+      "light": "#eddedc"
+    },
+    "error": {
+      "dark": "m3Error",
+      "light": "#edaba3"
+    },
+    "info": {
+      "dark": "m3Primary",
+      "light": "#9e3e56"
+    },
+    "markdownBlockQuote": {
+      "dark": "m3OnSurfaceVariant",
+      "light": "#605a59"
+    },
+    "markdownCode": {
+      "dark": "ansiGreen",
+      "light": "#a7cb8a"
+    },
+    "markdownCodeBlock": {
+      "dark": "m3OnSurface",
+      "light": "m3InverseOnSurface"
+    },
+    "markdownEmph": {
+      "dark": "ansiYellow",
+      "light": "#e7c586"
+    },
+    "markdownHeading": {
+      "dark": "m3Primary",
+      "light": "m3InversePrimary"
+    },
+    "markdownHorizontalRule": {
+      "dark": "m3OutlineVariant",
+      "light": "#8b8584"
+    },
+    "markdownImage": {
+      "dark": "ansiMagenta",
+      "light": "#83c5a2"
+    },
+    "markdownImageText": {
+      "dark": "ansiBrightMagenta",
+      "light": "ansiMagenta"
+    },
+    "markdownLink": {
+      "dark": "m3Tertiary",
+      "light": "#7cc29e"
+    },
+    "markdownLinkText": {
+      "dark": "ansiCyan",
+      "light": "ansiBlue"
+    },
+    "markdownListEnumeration": {
+      "dark": "m3Secondary",
+      "light": "#ccabb0"
+    },
+    "markdownListItem": {
+      "dark": "m3Primary",
+      "light": "m3InversePrimary"
+    },
+    "markdownStrong": {
+      "dark": "ansiBrightYellow",
+      "light": "#E3AF48"
+    },
+    "markdownText": {
+      "dark": "m3OnSurface",
+      "light": "m3InverseOnSurface"
+    },
+    "primary": {
+      "dark": "m3Primary",
+      "light": "m3InversePrimary"
+    },
+    "secondary": {
+      "dark": "m3Secondary",
+      "light": "#ccabb0"
+    },
+    "selectedListItemText": {
+      "dark": "m3Surface",
+      "light": "#ede6e4"
+    },
+    "success": {
+      "dark": "m3Success",
+      "light": "#97cea1"
+    },
+    "syntaxComment": {
+      "dark": "m3Outline",
+      "light": "#605a59"
+    },
+    "syntaxFunction": {
+      "dark": "ansiBlue",
+      "light": "#9ec5f6"
+    },
+    "syntaxKeyword": {
+      "dark": "ansiMagenta",
+      "light": "#e8b1e3"
+    },
+    "syntaxNumber": {
+      "dark": "ansiBrightMagenta",
+      "light": "#ecbfeb"
+    },
+    "syntaxOperator": {
+      "dark": "m3OnSurfaceVariant",
+      "light": "#605a59"
+    },
+    "syntaxPunctuation": {
+      "dark": "m3OnSurfaceVariant",
+      "light": "#605a59"
+    },
+    "syntaxString": {
+      "dark": "ansiGreen",
+      "light": "#abcd90"
+    },
+    "syntaxType": {
+      "dark": "ansiYellow",
+      "light": "#e5bc6f"
+    },
+    "syntaxVariable": {
+      "dark": "ansiCyan",
+      "light": "#6fced3"
+    },
+    "text": {
+      "dark": "m3OnSurface",
+      "light": "m3InverseOnSurface"
+    },
+    "textMuted": {
+      "dark": "m3OnSurfaceVariant",
+      "light": "#605a59"
+    },
+    "thinkingOpacity": 0.6,
+    "warning": {
+      "dark": "#E3AF48",
+      "light": "#e7c586"
+    }
+  }
+}
