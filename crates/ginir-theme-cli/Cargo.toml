@@ -1,6 +1,6 @@
 [package]
-name = "inir-theme-cli"
-description = "CLI for inir-theme-core"
+name = "ginir-theme-cli"
+description = "CLI for ginir-theme-core"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -9,11 +9,11 @@ repository.workspace = true
 authors.workspace = true
 
 [[bin]]
-name = "inir-theme"
+name = "ginir-theme"
 path = "src/main.rs"
 
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
-inir-theme-core = { path = "../inir-theme-core" }
+ginir-theme-core = { path = "../ginir-theme-core" }
 serde_json = "1"

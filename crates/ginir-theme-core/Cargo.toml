@@ -1,5 +1,5 @@
 [package]
-name = "inir-theme-core"
+name = "ginir-theme-core"
 description = "Rust theming core for iNiR: palette math and app target generators"
 version.workspace = true
 edition.workspace = true

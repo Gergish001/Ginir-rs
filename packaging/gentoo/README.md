@@ -1,10 +1,10 @@
 # Gentoo notes
 
-`inir-theme` itself is a plain Rust binary:
+`ginir-theme` itself is a plain Rust binary:
 
 ```sh
 cargo build --release
-install -m755 target/release/inir-theme ~/.local/bin/inir-theme
+install -m755 target/release/ginir-theme ~/.local/bin/ginir-theme
 ```
 
 For the full iNiR stack a Gentoo overlay is needed. The intended ebuilds are:
@@ -15,7 +15,7 @@ For the full iNiR stack a Gentoo overlay is needed. The intended ebuilds are:
 | `dev-util/inir-accel` | `snowarch/inir-accel` | Rust; optional `inir-qml-plugin` |
 | `dev-util/inir-cli` | `snowarch/inir-cli` | Go |
 | `gui-apps/inir` | `snowarch/iNiR` | QML payload, targets, runit/OpenRC user service |
-| `dev-util/inir-theme` | this repo | Rust; no Qt |
+| `dev-util/ginir-theme` | this repo | Rust; no Qt |
 
 The hard part is qs-rs: it needs Qt 6 (the upstream bundle uses 6.12) and
 LayerShellQt, or the prebuilt bundle. iNiR itself currently supports Arch,

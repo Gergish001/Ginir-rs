@@ -1,8 +1,8 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/inir-theme-core",
-    "crates/inir-theme-cli",
+    "crates/ginir-theme-core",
+    "crates/ginir-theme-cli",
 ]
 
 [workspace.package]

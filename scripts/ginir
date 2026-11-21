@@ -1,0 +1,10 @@
+#!/bin/sh
+# Run the iNiR shell CLI under the Ginir name.
+set -eu
+
+if ! command -v inir >/dev/null 2>&1; then
+  echo "ginir: the iNiR CLI (inir) is not installed" >&2
+  exit 127
+fi
+
+exec inir "$@"

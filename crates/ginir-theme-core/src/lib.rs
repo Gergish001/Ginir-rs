@@ -13,5 +13,5 @@ pub use color::{Color, Mode, Role};
 pub use context::{Options, Report, ThemeContext};
 pub use palette::Palette;
 
-/// Version reported by `inir-theme --version`.
+/// Version reported by `ginir-theme --version`.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

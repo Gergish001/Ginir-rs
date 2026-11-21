@@ -48,4 +48,4 @@ done
 
 echo
 echo "installed Ginir-rs modules into $INIR"
-echo "make sure ~/.local/bin/inir-theme exists (./scripts/install.sh)"
+echo "make sure ~/.local/bin/ginir-theme exists (./scripts/install.sh)"

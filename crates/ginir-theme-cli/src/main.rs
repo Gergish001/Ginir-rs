@@ -1,18 +1,18 @@
-//! `inir-theme` CLI.
+//! `ginir-theme` CLI.
 
 use std::path::PathBuf;
 use std::process::Command;
 
 use anyhow::{bail, Context, Result};
 use clap::{Args, Parser, Subcommand};
-use inir_theme_core::color::Color;
-use inir_theme_core::context::{Options, ThemeContext};
-use inir_theme_core::palette::Palette;
-use inir_theme_core::targets;
+use ginir_theme_core::color::Color;
+use ginir_theme_core::context::{Options, ThemeContext};
+use ginir_theme_core::palette::Palette;
+use ginir_theme_core::targets;
 
 #[derive(Parser, Debug)]
 #[command(
-    name = "inir-theme",
+    name = "ginir-theme",
     version,
     about = "Rust theming targets for iNiR (herdr, opencode, niri, fetch, cmatrix/lavat)"
 )]
@@ -121,7 +121,7 @@ fn apply(args: ApplyArgs) -> Result<()> {
     } else if let Some(id) = args.target.as_deref() {
         match targets::find(id) {
             Some(t) => vec![t],
-            None => bail!("unknown target: {id} (try `inir-theme list`)"),
+            None => bail!("unknown target: {id} (try `ginir-theme list`)"),
         }
     } else {
         bail!("pass --target <id> or --all")

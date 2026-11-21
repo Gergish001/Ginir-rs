@@ -1,7 +1,7 @@
 # Legacy implementations
 
 Reference copies of the scripts this crate replaces. They are **not** used by
-`inir-theme`; they document the colour maths and the original iNiR integration.
+`ginir-theme`; they document the colour maths and the original iNiR integration.
 
 - `theme-from-kitty.py` — original kitty/iNiR palette parser, transforms and
   herdr/opencode generators.

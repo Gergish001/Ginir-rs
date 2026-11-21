@@ -42,7 +42,7 @@ Ginir-rs — новый Rust-проект, выросший из iNiR; репо�
 
 > **Что здесь значит «Rust-first».** Логика темизации и бэкенда — чтение палитры
 > iNiR, преобразование акцента, запись конфигов приложений, перезагрузка
-> приложения — написана на Rust (`inir-theme`). QML-виджеты iNiR не
+> приложения — написана на Rust (`ginir-theme`). QML-виджеты iNiR не
 > переписываются: они по-прежнему работают на `qs-rs`, отдельном upstream-проекте.
 > Переписать эти виджеты на Rust — значит сделать новую оболочку, а не порт.
 
@@ -66,28 +66,32 @@ Ginir-rs — новый Rust-проект, выросший из iNiR; репо�
 
 ```sh
 cargo build --release
-install -m755 target/release/inir-theme ~/.local/bin/inir-theme
+install -m755 target/release/ginir-theme ~/.local/bin/ginir-theme
 # или
 ./scripts/install.sh
 ```
 
 Нужен Rust 1.85+; Qt и Python не нужны.
 
+`scripts/install.sh` ставит `ginir-theme` и обёртки `ginir`/`gi` вокруг CLI
+iNiR (`inir`). `ginir-theme` — отдельный Rust-инструмент; `ginir` (коротко:
+`gi`) — команда оболочки. `gi` пропускается, если это имя уже занято.
+
 ## Использование <a id="usage"></a>
 
 ```sh
-inir-theme list
-inir-theme doctor
-inir-theme apply --target herdr
-inir-theme apply --all --dry-run
-inir-theme apply --all
+ginir-theme list
+ginir-theme doctor
+ginir-theme apply --target herdr
+ginir-theme apply --all --dry-run
+ginir-theme apply --all
 ```
 
 Источник выбирается автоматически: сгенерированные iNiR `app-palette.json` +
 `terminal.json`, с откатом на `~/.config/kitty/theme.conf`. Можно переопределить:
 
 ```sh
-inir-theme apply --all \
+ginir-theme apply --all \
   --app-palette ~/.local/state/quickshell/user/generated/app-palette.json \
   --terminal-json ~/.local/state/quickshell/user/generated/terminal.json \
   --accent '#b78cda'
@@ -102,9 +106,9 @@ inir-theme apply --all \
 манифесты целей. Установить в живую iNiR:
 
 ```sh
-./scripts/install.sh                 # собрать и поставить ~/.local/bin/inir-theme
-./scripts/install-inir-modules.sh    # скопировать модули/цели, сделав бэкапы
-inir theme doctor
+./scripts/install.sh                  # собрать и поставить ginir-theme, ginir, gi
+./scripts/install-ginir-modules.sh    # скопировать модули/цели, сделав бэкапы
+ginir theme doctor
 ```
 
 | модуль | манифест цели | Rust-цель |
@@ -121,15 +125,16 @@ inir theme doctor
 ## Структура
 
 ```
-crates/inir-theme-core/         парсинг акцента, математика цвета, палитра, цели
-crates/inir-theme-cli/          бинарь inir-theme
-crates/inir-theme-core/assets/  шаблон OpenCode (производный от iNiR)
-integration/inir/               модули iNiR + манифесты целей (дополнение)
-patches/                        внешние C-патчи вне Rust
-legacy/                         исходные реализации на Python/Bash
-scripts/install.sh              локальная установка бинаря
-scripts/install-inir-modules.sh установка модулей в живую iNiR
-upstream/inir/                  эталонное QML-дерево iNiR без изменений
+crates/ginir-theme-core/          парсинг акцента, математика цвета, палитра, цели
+crates/ginir-theme-cli/           бинарь ginir-theme
+crates/ginir-theme-core/assets/   шаблон OpenCode (производный от iNiR)
+integration/inir/                 модули iNiR + манифесты целей (дополнение)
+patches/                          внешние C-патчи вне Rust
+legacy/                           исходные реализации на Python/Bash
+scripts/install.sh                установка ginir-theme, ginir и gi
+scripts/install-ginir-modules.sh  установка модулей в живую iNiR
+scripts/ginir, scripts/gi         обёртки вокруг CLI iNiR
+upstream/inir/                    эталонное QML-дерево iNiR без изменений
 ```
 
 ## Gentoo
@@ -153,16 +158,16 @@ upstream/inir/                  эталонное QML-дерево iNiR без 
 - inir-cli: GPL-3.0
 - этот проект: **GPL-3.0**
 
-Шаблон OpenCode в `crates/inir-theme-core/assets/` произведён от сгенерированной
+Шаблон OpenCode в `crates/ginir-theme-core/assets/` произведён от сгенерированной
 темы iNiR и остаётся под лицензией iNiR. Патч fetch относится к отдельному
 исходнику 3D `fetch`.
 
 ## Планы
 
 1. Перенести больше потребителей акцента (lazygit, акценты GTK/Qt, другие
-   терминалы) в `inir-theme-core`, каждый отдельной целью.
+   терминалы) в `ginir-theme-core`, каждый отдельной целью.
 2. Перенести генераторы в upstream `inir-accel`, чтобы оболочка получала один
    Rust-бинарь вместо Python-хелпера и Bash-модулей.
 3. Добавить цветовую тему/плагин для Hub, чтобы цели ставились без форка.
-4. Выпустить Gentoo-overlay для `inir-theme`, `qs-rs`, `inir-accel`, `inir-cli`
+4. Выпустить Gentoo-overlay для `ginir-theme`, `qs-rs`, `inir-accel`, `inir-cli`
    и iNiR.

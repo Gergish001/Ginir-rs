@@ -42,7 +42,7 @@ applications. The original iNiR QML tree is kept untouched in
 
 > **What "Rust-first" means here.** The theming/backend logic — reading iNiR's
 > palette, transforming the accent, writing app configs, reloading the app — is
-> Rust (`inir-theme`). The iNiR QML widgets are not reimplemented: they still run
+> Rust (`ginir-theme`). The iNiR QML widgets are not reimplemented: they still run
 > on `qs-rs`, a separate upstream project. Rewriting those widgets would be a new
 > shell, not a port.
 
@@ -66,21 +66,25 @@ touched by this project** and get no patches or config changes.
 
 ```sh
 cargo build --release
-install -m755 target/release/inir-theme ~/.local/bin/inir-theme
+install -m755 target/release/ginir-theme ~/.local/bin/ginir-theme
 # or
 ./scripts/install.sh
 ```
 
 Requires Rust 1.85+; no Qt, no Python.
 
+`scripts/install.sh` installs `ginir-theme` and the `ginir`/`gi` wrappers
+around the iNiR CLI (`inir`). `ginir-theme` is the Rust tool; `ginir` (short:
+`gi`) is the shell command. `gi` is skipped if that name is already taken.
+
 ## Usage
 
 ```sh
-inir-theme list
-inir-theme doctor
-inir-theme apply --target herdr
-inir-theme apply --all --dry-run
-inir-theme apply --all
+ginir-theme list
+ginir-theme doctor
+ginir-theme apply --target herdr
+ginir-theme apply --all --dry-run
+ginir-theme apply --all
 ```
 
 Source selection is automatic: iNiR's generated
@@ -88,7 +92,7 @@ Source selection is automatic: iNiR's generated
 `~/.config/kitty/theme.conf`. Override with:
 
 ```sh
-inir-theme apply --all \
+ginir-theme apply --all \
   --app-palette ~/.local/state/quickshell/user/generated/app-palette.json \
   --terminal-json ~/.local/state/quickshell/user/generated/terminal.json \
   --accent '#b78cda'
@@ -102,9 +106,9 @@ Every write is backed up to `~/gentoo-opt-backups/`. `--dry-run` only reports.
 target manifests. Install them into a live iNiR tree with:
 
 ```sh
-./scripts/install.sh                 # build + install ~/.local/bin/inir-theme
-./scripts/install-inir-modules.sh    # copy modules/targets, backing up conflicts
-inir theme doctor
+./scripts/install.sh                  # build + install ginir-theme, ginir, gi
+./scripts/install-ginir-modules.sh    # copy modules/targets, backing up conflicts
+ginir theme doctor
 ```
 
 | module | target manifest | Rust target |
@@ -121,15 +125,16 @@ the theming modules run, so there is no race with the kitty target.
 ## Layout
 
 ```
-crates/inir-theme-core/         accent parsing, colour maths, palette, targets
-crates/inir-theme-cli/          inir-theme binary
-crates/inir-theme-core/assets/  OpenCode template (derived from iNiR)
-integration/inir/               iNiR modules + target manifests (additive)
-patches/                        external C patches outside Rust
-legacy/                         original Python/Bash implementations
-scripts/install.sh              local install of the binary
-scripts/install-inir-modules.sh install modules into a live iNiR tree
-upstream/inir/                  untouched iNiR QML reference tree
+crates/ginir-theme-core/          accent parsing, colour maths, palette, targets
+crates/ginir-theme-cli/           ginir-theme binary
+crates/ginir-theme-core/assets/   OpenCode template (derived from iNiR)
+integration/inir/                 iNiR modules + target manifests (additive)
+patches/                          external C patches outside Rust
+legacy/                           original Python/Bash implementations
+scripts/install.sh                install ginir-theme, ginir and gi
+scripts/install-ginir-modules.sh  install modules into a live iNiR tree
+scripts/ginir, scripts/gi         wrappers around the iNiR CLI
+upstream/inir/                    untouched iNiR QML reference tree
 ```
 
 ## Gentoo
@@ -154,16 +159,16 @@ part, not this CLI.
 - inir-cli: GPL-3.0
 - this project: **GPL-3.0**
 
-The OpenCode template in `crates/inir-theme-core/assets/` is derived from iNiR's
+The OpenCode template in `crates/ginir-theme-core/assets/` is derived from iNiR's
 generated theme and remains under the iNiR license. The fetch patch is for the
 separate 3D `fetch` source.
 
 ## Roadmap
 
 1. Port more accent consumers (lazygit, GTK/Qt accents, other terminals) into
-   `inir-theme-core`, each as a separate target.
+   `ginir-theme-core`, each as a separate target.
 2. Move the generators into `inir-accel` upstream so the shell gets one Rust
    binary instead of a Python helper plus Bash modules.
 3. Add a Hub colour-theme/plugin so users install the targets without a fork.
-4. Ship the Gentoo overlay for `inir-theme`, `qs-rs`, `inir-accel`, `inir-cli`
+4. Ship the Gentoo overlay for `ginir-theme`, `qs-rs`, `inir-accel`, `inir-cli`
    and iNiR.

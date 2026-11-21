@@ -1,7 +1,7 @@
 # Patches
 
 Everything in `../integration/inir/` is a Ginir-rs addition to iNiR: target
-manifests and the color modules that call the Rust `inir-theme` binary. The
+manifests and the color modules that call the Rust `ginir-theme` binary. The
 `upstream/inir/` tree itself is left untouched.
 
 - `fetch-icons-dark-label.patch` — icons and the darkened label colour for the
