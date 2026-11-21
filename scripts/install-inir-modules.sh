@@ -25,6 +25,9 @@ for stale in \
   fi
 done
 
+# The old dark60 theme is no longer generated and had broken text roles.
+rm -f "$HOME/.config/opencode/themes/inir-dark60.json"
+
 for file in "$SRC"/modules/*.sh; do
   name="$(basename "$file")"
   target="$INIR/scripts/colors/modules/$name"
