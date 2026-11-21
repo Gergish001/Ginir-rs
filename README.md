@@ -1,12 +1,44 @@
-# Ginir-rs
+<p align="center">
+  <img src="docs/images/readme/mark.svg" alt="" width="56">
+</p>
 
-Rust-first theming and backend layer built on top of [iNiR](https://github.com/snowarch/iNiR):
-palette maths, accent parsing/transformation and generators that push the
-derived accent into other applications.
+<h1 align="center">Ginir-rs</h1>
 
-This is a new project that started from iNiR; the GitHub repository is a fork
-only because that is how it was created. The original iNiR QML tree is kept
-untouched in [`upstream/inir/`](upstream/inir/) as reference.
+<p align="center">
+  Rust-first theming and backend layer for <a href="https://github.com/snowarch/iNiR">iNiR</a> on Gentoo.<br>
+  Parse the accent once, transform it per app, keep every surface in sync.
+</p>
+
+<p align="center">
+  <a href="https://github.com/Gergish001/Ginir-rs/actions/workflows/rust.yml"><img src="https://github.com/Gergish001/Ginir-rs/actions/workflows/rust.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="https://github.com/Gergish001/Ginir-rs/stargazers"><img src="https://img.shields.io/github/stars/Gergish001/Ginir-rs?style=flat-square&color=111111" alt="Stars"></a>
+  <a href="https://github.com/Gergish001/Ginir-rs/releases"><img src="https://img.shields.io/badge/version-0.1.0-111111?style=flat-square" alt="Version 0.1.0"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-111111?style=flat-square" alt="GPL-3.0"></a>
+  <a href="rust-toolchain.toml"><img src="https://img.shields.io/badge/rust-1.85%2B-111111?style=flat-square&logo=rust&logoColor=white" alt="Rust 1.85+"></a>
+</p>
+
+<p align="center">
+  <a href="#targets">Targets</a> ·
+  <a href="#build-and-install">Install</a> ·
+  <a href="#usage">Usage</a> ·
+  <a href="#inir-integration">iNiR integration</a> ·
+  <a href="https://github.com/snowarch/iNiR">Upstream</a> ·
+  <a href="https://github.com/Gergish001/Ginir-rs/issues">Issues</a>
+</p>
+
+<p align="center">
+  <sub>
+    <a href="README.md">English</a> ·
+    <a href="docs/readme/README.ru.md">Русский</a> ·
+    <a href="docs/readme/TRANSLATING.md">help translate</a>
+  </sub>
+</p>
+
+Ginir-rs is a new Rust project that started from iNiR; the GitHub repository is a
+fork only because that is how it was created. It covers palette maths, accent
+parsing/transformation, and generators that push the derived accent into other
+applications. The original iNiR QML tree is kept untouched in
+[`upstream/inir/`](upstream/inir/) as reference.
 
 > **What "Rust-first" means here.** The theming/backend logic — reading iNiR's
 > palette, transforming the accent, writing app configs, reloading the app — is

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Ginir-rs">
+  <rect width="64" height="64" rx="16" fill="#111111"/>
+  <circle cx="24" cy="26" r="11.5" fill="#60a3e6" opacity="0.92"/>
+  <circle cx="40" cy="26" r="11.5" fill="#b78cda" opacity="0.88"/>
+  <circle cx="32" cy="41" r="11.5" fill="#e18195" opacity="0.84"/>
+</svg>
