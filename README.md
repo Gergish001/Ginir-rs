@@ -122,6 +122,20 @@ ginir theme doctor
 The modules read `app-palette.json` and `terminal.json`, which iNiR writes before
 the theming modules run, so there is no race with the kitty target.
 
+### Ginir UI defaults
+
+Apply the single-dock Ginir layout (one bottom dock, clock centred at the top,
+3-line bar height, 12pt JetBrains Mono Nerd Font with glyphs) to the live shell:
+
+```sh
+./scripts/ginir-ui-defaults.sh
+```
+
+The script backs up the shell config to `~/gentoo-opt-backups/` and restarts the
+running shell. Override the config path with `GINIR_CONFIG=...` if needed. A
+matching default should also live in the shell's own config schema for fresh
+installs; this script is the safe, idempotent path for an existing checkout.
+
 ## Layout
 
 ```
@@ -133,6 +147,7 @@ patches/                          external C patches outside Rust
 legacy/                           original Python/Bash implementations
 scripts/install.sh                install ginir-theme, ginir and gi
 scripts/install-ginir-modules.sh  install modules into a live iNiR tree
+scripts/ginir-ui-defaults.sh      apply the single-dock/3-line Ginir bar defaults
 scripts/ginir, scripts/gi         wrappers around the iNiR CLI
 upstream/inir/                    untouched iNiR QML reference tree
 ```
