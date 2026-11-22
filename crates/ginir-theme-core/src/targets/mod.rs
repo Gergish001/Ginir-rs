@@ -5,6 +5,7 @@ pub mod herdr;
 pub mod launchers;
 pub mod niri;
 pub mod opencode;
+pub mod umbriel;
 
 use anyhow::Result;
 
@@ -22,6 +23,7 @@ pub fn all() -> Vec<Box<dyn Target>> {
         Box::new(herdr::HerdrTarget),
         Box::new(opencode::OpencodeTarget),
         Box::new(niri::NiriTarget),
+        Box::new(umbriel::UmbrielTarget),
         Box::new(fetch::FetchTarget),
         Box::new(launchers::LaunchersTarget),
     ]
