@@ -57,6 +57,7 @@ with a per-app transform.
 | `opencode` | `~/.config/opencode/themes/inir.json` `m3Tertiary` | exact iNiR accent (active theme patch) |
 | `niri` | Niri `focus-ring active-color` in `config.kdl` + `config.d/*.kdl` | −20% lightness, saturation ×1.34 |
 | `umbriel` | `~/.local/state/quickshell/user/generated/umbriel-colors.toml` | palette roles + iRiS compositor blur |
+| `firefox` | Firefox-family profile `user.js` (managed block) | palette as `ui.*` system colours |
 | `fetch3d` | `~/.config/fetch/config` `label_color` | −10% lightness (3D fetch, **not** fastfetch) |
 | `launchers` | `~/.local/bin/cmx`, `~/.local/bin/lavax` | nearest ANSI / accent + teal |
 
@@ -116,6 +117,7 @@ ginir theme doctor
 |---|---|---|
 | `05-niri.sh` | `niri.json` | `niri` |
 | `15-umbriel.sh` | `umbriel.json` | `umbriel` |
+| `45-firefox.sh` | `firefox.json` | `firefox` |
 | `95-herdr.sh` | `herdr.json` | `herdr` |
 | `96-opencode-accent.sh` | `opencode-accent.json` | `opencode` |
 | `97-fetch3d.sh` | `fetch3d.json` | `fetch3d` |

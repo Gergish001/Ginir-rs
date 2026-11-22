@@ -14,7 +14,7 @@ use ginir_theme_core::targets;
 #[command(
     name = "ginir-theme",
     version,
-    about = "Rust theming targets for iNiR (herdr, opencode, niri, umbriel, fetch, cmatrix/lavat)"
+    about = "Rust theming targets for iNiR (herdr, opencode, niri, umbriel, firefox, fetch, cmatrix/lavat)"
 )]
 struct Cli {
     #[command(subcommand)]

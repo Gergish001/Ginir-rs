@@ -1,6 +1,7 @@
 //! Target registry.
 
 pub mod fetch;
+pub mod firefox;
 pub mod herdr;
 pub mod launchers;
 pub mod niri;
@@ -24,6 +25,7 @@ pub fn all() -> Vec<Box<dyn Target>> {
         Box::new(opencode::OpencodeTarget),
         Box::new(niri::NiriTarget),
         Box::new(umbriel::UmbrielTarget),
+        Box::new(firefox::FirefoxTarget),
         Box::new(fetch::FetchTarget),
         Box::new(launchers::LaunchersTarget),
     ]
