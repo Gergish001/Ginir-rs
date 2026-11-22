@@ -5,6 +5,7 @@ pub mod fetch;
 pub mod firefox;
 pub mod herdr;
 pub mod launchers;
+pub mod limusic;
 pub mod niri;
 pub mod opencode;
 pub mod umbriel;
@@ -28,6 +29,7 @@ pub fn all() -> Vec<Box<dyn Target>> {
         Box::new(umbriel::UmbrielTarget),
         Box::new(firefox::FirefoxTarget),
         Box::new(chrome::ChromeTarget),
+        Box::new(limusic::LimusicTarget),
         Box::new(fetch::FetchTarget),
         Box::new(launchers::LaunchersTarget),
     ]
