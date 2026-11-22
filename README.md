@@ -58,6 +58,7 @@ with a per-app transform.
 | `niri` | Niri `focus-ring active-color` in `config.kdl` + `config.d/*.kdl` | −20% lightness, saturation ×1.34 |
 | `umbriel` | `~/.local/state/quickshell/user/generated/umbriel-colors.toml` | palette roles + iRiS compositor blur |
 | `firefox` | Firefox-family profile `user.js` (managed block) | palette as `ui.*` system colours |
+| `chrome` | Chromium policy `ii-theme.json` + profile `Preferences` | header colour + light/dark scheme |
 | `fetch3d` | `~/.config/fetch/config` `label_color` | −10% lightness (3D fetch, **not** fastfetch) |
 | `launchers` | `~/.local/bin/cmx`, `~/.local/bin/lavax` | nearest ANSI / accent + teal |
 
@@ -117,6 +118,7 @@ ginir theme doctor
 |---|---|---|
 | `05-niri.sh` | `niri.json` | `niri` |
 | `15-umbriel.sh` | `umbriel.json` | `umbriel` |
+| `40-chrome.sh` | `chrome.json` | `chrome` |
 | `45-firefox.sh` | `firefox.json` | `firefox` |
 | `95-herdr.sh` | `herdr.json` | `herdr` |
 | `96-opencode-accent.sh` | `opencode-accent.json` | `opencode` |
