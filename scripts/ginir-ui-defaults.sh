@@ -31,7 +31,9 @@ m3 = bar.setdefault("m3", {})
 layouts = m3.setdefault("layouts", {})
 layouts["leftLayout"] = ["leftSidebarButton", "media", "workspaces"]
 layouts["middleLayout"] = ["clockWidget"]
-layouts["rightLayout"] = ["weatherBar", "systemIcons"]
+# The system tray's tooltips clipped over the weather text; keep the weather
+# capsule only. Tray stays available from the control center.
+layouts["rightLayout"] = ["weatherBar"]
 m3.setdefault("customLayouts", {}).update(
     {"leftLayout": [], "middleLayout": [], "rightLayout": []}
 )
