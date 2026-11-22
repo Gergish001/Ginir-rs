@@ -1,0 +1,4 @@
+[env]
+# gtk4-layer-shell is installed under /usr/local on Gentoo; keep the default
+# pkg-config paths in the value so the GTK/GLib crates still resolve.
+PKG_CONFIG_PATH = { value = "/usr/local/lib64/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig", force = true }

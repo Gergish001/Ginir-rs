@@ -1,9 +1,17 @@
 # iNiR → Rust porting status
 
-This repository ports the parts of iNiR that are not the QML UI: palette maths
-and the generators that write other apps' configs. The QML shell itself is still
-iNiR's; a native Rust shell is a separate project, not a target rewrite (646 QML
-files, ~170k lines).
+This repository ports the parts of iNiR that are not the QML UI: palette maths,
+the generators that write other apps' configs, and a separate native shell.
+The QML shell remains the reference (646 QML files, ~170k lines); the Rust shell
+does not rewrite it in place.
+
+## Native Rust shell
+
+`crates/ginir-shell` is a separate GTK4 + `gtk4-layer-shell` workspace. The first
+slice is the top bar (niri workspaces, focused window, clock, weather, battery,
+network) in iNiR's palette and font. It reads iNiR's config and generated colors;
+it never writes the QML tree. Next: dock, side panels, control center, tray,
+notifications, settings, overview.
 
 ## Rust targets
 
@@ -34,4 +42,4 @@ duplicate upstream logic.
 1. Read only the generated palette/state; never launch the app for theming.
 2. Keep a managed block or a marked file; back up before writing.
 3. `--dry-run` must report the same paths without touching them.
-4. Add a `_test` for the file shape and the disabled/removal path.
+4. Add a Rust test for the file shape and the disabled/removal path.

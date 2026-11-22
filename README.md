@@ -81,6 +81,24 @@ Requires Rust 1.85+; no Qt, no Python.
 around the iNiR CLI (`inir`). `ginir-theme` is the Rust tool; `ginir` (short:
 `gi`) is the shell command. `gi` is skipped if that name is already taken.
 
+## Rust shell (experimental)
+
+`crates/ginir-shell` is a separate Rust-native GTK4 + Wayland layer-shell. The
+QML iNiR tree stays the reference and is never written; the shell only reads its
+palette and config.
+
+The first slice is the top bar: niri workspaces and focused window, clock,
+weather, battery/network, iNiR colors and font. Build and run:
+
+```sh
+./scripts/install-shell.sh
+inir bar close        # while testing over the QML bar
+ginir-shell-rs
+```
+
+The dock, side panels, control center, tray, notifications, settings and
+overview are the next modules. See [`docs/SHELL.md`](docs/SHELL.md).
+
 ## Usage
 
 ```sh
@@ -149,6 +167,7 @@ installs; this script is the safe, idempotent path for an existing checkout.
 ```
 crates/ginir-theme-core/          accent parsing, colour maths, palette, targets
 crates/ginir-theme-cli/           ginir-theme binary
+crates/ginir-shell/               separate Rust shell (GTK4 + layer-shell)
 crates/ginir-theme-core/assets/   OpenCode template (derived from iNiR)
 integration/inir/                 iNiR modules + target manifests (additive)
 patches/                          external C patches outside Rust
@@ -156,6 +175,7 @@ legacy/                           original Python/Bash implementations
 scripts/install.sh                install ginir-theme, ginir and gi
 scripts/install-ginir-modules.sh  install modules into a live iNiR tree
 scripts/ginir-ui-defaults.sh      apply the single-dock/3-line Ginir bar defaults
+scripts/install-shell.sh          build + install ginir-shell-rs
 scripts/ginir, scripts/gi         wrappers around the iNiR CLI
 upstream/inir/                    untouched iNiR QML reference tree
 ```
