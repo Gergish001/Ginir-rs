@@ -8,10 +8,10 @@ does not rewrite it in place.
 ## Native Rust shell
 
 `crates/ginir-shell` is a separate GTK4 + `gtk4-layer-shell` workspace. The first
-slice is the top bar (niri workspaces, focused window, clock, weather, battery,
-network) in iNiR's palette and font. It reads iNiR's config and generated colors;
-it never writes the QML tree. Next: dock, side panels, control center, tray,
-notifications, settings, overview.
+slices are the top bar (niri workspaces, focused window, clock, weather, battery,
+network) and an optional dock that follows the active family's dock switch. It
+reads iNiR's config and generated colors; it never writes the QML tree. Next:
+side panels, control center, tray, notifications, settings, overview.
 
 ## Rust targets
 

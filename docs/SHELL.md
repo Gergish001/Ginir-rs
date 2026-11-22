@@ -16,9 +16,14 @@ The top bar:
 - colors from iNiR's `colors.json`, font and bar height from
   `~/.config/illogical-impulse/config.json`.
 
-It is a layer-shell surface on the top layer with a fixed exclusive zone. The
-dock, side panels, control center, tray, notifications, settings and overview are
-still the QML shell's job and are the next modules.
+It is a layer-shell surface on the top layer with a fixed exclusive zone.
+
+An optional dock follows the active iNiR family: `ii` uses
+`material.dock.enable`, iRiS uses `iris.dock.enable`. The current original iNiR
+config is iRiS with the dock off, so the shell shows the bar only; the dock
+appears when its config turns it on. The side panels, control center, tray,
+notifications, settings and overview are still the QML shell's job and are the
+next modules.
 
 ## Prerequisites
 

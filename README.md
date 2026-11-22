@@ -87,8 +87,10 @@ around the iNiR CLI (`inir`). `ginir-theme` is the Rust tool; `ginir` (short:
 QML iNiR tree stays the reference and is never written; the shell only reads its
 palette and config.
 
-The first slice is the top bar: niri workspaces and focused window, clock,
-weather, battery/network, iNiR colors and font. Build and run:
+The first slices are the top bar and an optional dock: niri workspaces and
+focused window, clock, weather, battery/network, iNiR colors and font. The dock
+follows `material.dock.enable` for the `ii` family and `iris.dock.enable` for
+iRiS. Build and run:
 
 ```sh
 ./scripts/install-shell.sh

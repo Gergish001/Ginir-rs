@@ -5,6 +5,7 @@
 //! weather from iNiR's cache, battery and network status. It renders through
 //! GTK4 + wlr-layer-shell with the same palette and font as iNiR.
 
+use std::cell::RefCell;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::rc::Rc;
@@ -12,8 +13,8 @@ use std::rc::Rc;
 use chrono::Local;
 use gtk4::prelude::*;
 use gtk4::{
-    pango, Align, Application, ApplicationWindow, Box, CenterBox, CssProvider, Image, Label,
-    Orientation,
+    pango, Align, Application, ApplicationWindow, Box, Button, CenterBox, CssProvider, Image,
+    Label, Orientation,
 };
 use gtk4_layer_shell::{Edge, Layer, LayerShell};
 use serde_json::Value;
@@ -92,6 +93,10 @@ fn build_ui(app: &Application) {
     root.set_end_widget(Some(&right));
     window.set_child(Some(&root));
     window.present();
+
+    if dock_enabled() {
+        build_dock(app);
+    }
 
     let update = {
         let theme = theme.clone();
@@ -173,6 +178,21 @@ window {{ background: transparent; }}
 .status {{ font-size: 13px; color: alpha({foreground}, 0.8); }}
 .status-icon {{ color: alpha({foreground}, 0.8); }}
 #weather {{ color: alpha({foreground}, 0.9); margin-right: 4px; }}
+#dock-root {{
+  background-color: alpha({background}, 0.90);
+  border-radius: 22px;
+  padding: 6px 10px;
+}}
+.dock-button {{
+  min-width: 44px;
+  min-height: 44px;
+  padding: 5px;
+  border-radius: 14px;
+  background: transparent;
+}}
+.dock-button:hover {{ background-color: alpha({foreground}, 0.12); }}
+.dock-button:active {{ background-color: alpha({accent}, 0.30); }}
+.dock-icon {{ color: {foreground}; }}
 "#
     )
 }
@@ -372,6 +392,189 @@ fn update_network(network: &Image) {
     } else {
         "network-wired-symbolic"
     }));
+}
+
+fn dock_enabled() -> bool {
+    let home = home();
+    let Some(config) = load_config(&home) else {
+        return true;
+    };
+    let family = config
+        .get("panelFamily")
+        .and_then(Value::as_str)
+        .unwrap_or("ii");
+    if family == "iris" {
+        config
+            .pointer("/iris/dock/enable")
+            .and_then(Value::as_bool)
+            .unwrap_or(false)
+    } else {
+        config
+            .pointer("/material/dock/enable")
+            .and_then(Value::as_bool)
+            .unwrap_or(true)
+    }
+}
+
+#[derive(Clone)]
+struct DockApp {
+    id: String,
+    desktop_id: String,
+    window_id: Option<i64>,
+}
+
+fn build_dock(app: &Application) {
+    let window = ApplicationWindow::builder()
+        .application(app)
+        .title("Ginir Dock")
+        .build();
+    window.init_layer_shell();
+    window.set_namespace(Some("ginir-dock-rs"));
+    window.set_layer(Layer::Top);
+    window.set_anchor(Edge::Bottom, true);
+    window.set_anchor(Edge::Left, true);
+    window.set_anchor(Edge::Right, true);
+    window.set_exclusive_zone(64);
+    window.set_margin(Edge::Bottom, 8);
+    window.set_default_size(1600, 64);
+    window.set_decorated(false);
+    window.set_resizable(false);
+
+    let root = CenterBox::new();
+    root.set_widget_name("dock-window");
+    let content = Box::new(Orientation::Horizontal, 6);
+    content.set_widget_name("dock-root");
+    content.set_halign(Align::Center);
+    content.set_valign(Align::Center);
+    root.set_center_widget(Some(&content));
+    window.set_child(Some(&root));
+    window.present();
+
+    let last = Rc::new(RefCell::new(String::new()));
+    let handle = content.clone();
+    let refresh = move || {
+        let (signature, apps) = dock_state();
+        if signature == *last.borrow() {
+            return;
+        }
+        *last.borrow_mut() = signature;
+        while let Some(child) = handle.first_child() {
+            handle.remove(&child);
+        }
+        for app in &apps {
+            handle.append(&dock_button(app));
+        }
+    };
+    refresh();
+    gtk4::glib::timeout_add_seconds_local(2, move || {
+        refresh();
+        gtk4::glib::ControlFlow::Continue
+    });
+}
+
+fn dock_state() -> (String, Vec<DockApp>) {
+    let home = home();
+    let config = load_config(&home);
+    let mut pinned: Vec<String> = config
+        .as_ref()
+        .and_then(|config| config.pointer("/apps/pinned"))
+        .and_then(Value::as_array)
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(Value::as_str)
+                .map(str::to_string)
+                .collect()
+        })
+        .unwrap_or_default();
+    if pinned.is_empty() {
+        if let Some(terminal) = config
+            .as_ref()
+            .and_then(|config| config.pointer("/apps/terminal"))
+            .and_then(Value::as_str)
+        {
+            pinned.push(terminal.to_string());
+        }
+        pinned.push("org.gnome.Nautilus".into());
+    }
+
+    let windows = niri_json(&["windows"])
+        .and_then(|value| value.as_array().cloned())
+        .unwrap_or_default();
+    let mut running: Vec<(String, i64)> = Vec::new();
+    for window in windows {
+        let Some(app_id) = window.get("app_id").and_then(Value::as_str) else {
+            continue;
+        };
+        let Some(id) = window.get("id").and_then(Value::as_i64) else {
+            continue;
+        };
+        if app_id.is_empty() || running.iter().any(|(app, _)| app == app_id) {
+            continue;
+        }
+        running.push((app_id.to_string(), id));
+    }
+
+    let mut apps = Vec::new();
+    let mut seen: Vec<String> = Vec::new();
+    for id in pinned {
+        let window_id = running
+            .iter()
+            .find(|(app, _)| app == &id)
+            .map(|(_, id)| *id);
+        let desktop_id = if id.ends_with(".desktop") {
+            id.clone()
+        } else {
+            format!("{id}.desktop")
+        };
+        apps.push(DockApp {
+            id: id.clone(),
+            desktop_id,
+            window_id,
+        });
+        seen.push(id);
+    }
+    for (app_id, window_id) in running {
+        if seen.iter().any(|id| id == &app_id) {
+            continue;
+        }
+        apps.push(DockApp {
+            desktop_id: format!("{app_id}.desktop"),
+            id: app_id,
+            window_id: Some(window_id),
+        });
+    }
+
+    let signature = apps
+        .iter()
+        .map(|app| format!("{}:{}", app.id, app.window_id.unwrap_or(-1)))
+        .collect::<Vec<_>>()
+        .join("|");
+    (signature, apps)
+}
+
+fn dock_button(app: &DockApp) -> Button {
+    let button = Button::new();
+    button.add_css_class("dock-button");
+    button.set_tooltip_text(Some(app.id.as_str()));
+    let icon = Image::from_icon_name(&app.id);
+    icon.set_pixel_size(30);
+    icon.add_css_class("dock-icon");
+    button.set_child(Some(&icon));
+
+    let launch_id = app.desktop_id.trim_end_matches(".desktop").to_string();
+    let window_id = app.window_id;
+    button.connect_clicked(move |_| {
+        if let Some(id) = window_id {
+            let _ = Command::new("niri")
+                .args(["msg", "action", "focus-window", "--id"])
+                .arg(id.to_string())
+                .spawn();
+        } else {
+            let _ = Command::new("gtk-launch").arg(&launch_id).spawn();
+        }
+    });
+    button
 }
 
 fn niri_json(args: &[&str]) -> Option<Value> {
